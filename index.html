@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Tập Ôn Tập Cuối Kỳ II - Tiếng Anh Lớp 7</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .step { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .step.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .radio-label {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .radio-label:hover { background-color: #f3f4f6; }
+        input[type="radio"]:checked + span { font-weight: 600; color: #2563eb; }
+        input[type="radio"]:checked { accent-color: #2563eb; }
+        
+        /* Teacher Mode Styles */
+        #teacher-view { display: none; }
+        .correct-box { background-color: #dcfce7; border-color: #22c55e; }
+        .wrong-box { background-color: #fee2e2; border-color: #ef4444; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen py-8 px-4 sm:px-8">
+
+    <!-- STUDENT VIEW (QUIZ) -->
+    <div id="quiz-view" class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        
+        <!-- Header -->
+        <div class="bg-blue-600 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold uppercase">Câu Hỏi Ôn Tập Cuối Kỳ II Lớp 7</h1>
+            <p class="mt-2 text-blue-100">Năm học 2025 - 2026 | Môn: Tiếng Anh</p>
+        </div>
+
+        <div class="p-6 sm:p-8">
+            
+            <!-- STEP 0: NHẬP TÊN -->
+            <div id="step-0" class="step active text-center py-10">
+                <h2 class="text-xl font-semibold mb-4">Chào mừng em đến với bài ôn tập!</h2>
+                <p class="mb-6 text-slate-600">Vui lòng nhập họ tên của em để bắt đầu làm bài. Hệ thống sẽ chấm điểm tự động và tạo Link nộp bài cho Giáo viên.</p>
+                <div class="max-w-md mx-auto">
+                    <input type="text" id="studentName" placeholder="Ví dụ: Nguyễn Văn A" class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none mb-4 text-center text-lg">
+                    <button onclick="startQuiz()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200">
+                        BẮT ĐẦU LÀM BÀI
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 1: LANGUAGE FOCUS 1 -->
+            <div id="step-1" class="step">
+                <h2 class="text-xl font-bold mb-4 text-blue-800 border-b pb-2">PHẦN 1: LANGUAGE FOCUS (Pronunciation & Stress)</h2>
+                <div class="mb-8">
+                    <h3 class="font-semibold mb-3">Part 1. Choose the word whose underlined part is pronounced differently from the others</h3>
+                    <div id="part1-container" class="space-y-4"></div>
+                </div>
+                <div class="mb-4">
+                    <h3 class="font-semibold mb-3">Part 2. Choose the word which has a different stress pattern from the others.</h3>
+                    <div id="part2-container" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- STEP 2: LANGUAGE FOCUS 2 -->
+            <div id="step-2" class="step">
+                <h2 class="text-xl font-bold mb-4 text-blue-800 border-b pb-2">PHẦN 2: LANGUAGE FOCUS (Multiple Choice)</h2>
+                <div class="mb-4">
+                    <h3 class="font-semibold mb-3">Part 3. Circle the letter A, B, C or D to indicate the answer that best fits each gap in the following questions.</h3>
+                    <div id="part3-container" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- STEP 3: VOCAB & WORD FORM -->
+            <div id="step-3" class="step">
+                <h2 class="text-xl font-bold mb-4 text-blue-800 border-b pb-2">PHẦN 3: VOCABULARY & WORD FORM</h2>
+                <div class="mb-8">
+                    <h3 class="font-semibold mb-3">Part 4. Circle the letter A, B, C or D to indicate the word/phrase that is CLOSEST in meaning.</h3>
+                    <div id="part4-container" class="space-y-4"></div>
+                </div>
+                <div class="mb-8">
+                    <h3 class="font-semibold mb-3">Part 5. Circle the letter A, B, C or D to indicate the word/phrase that is OPPOSITE in meaning.</h3>
+                    <div id="part5-container" class="space-y-4"></div>
+                </div>
+                <div class="mb-4">
+                    <h3 class="font-semibold mb-3">Ex 6. Put each word in capital letters into the correct form so that it can fit the gap in each sentence below.</h3>
+                    <div id="ex6-container" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- STEP 4: READING -->
+            <div id="step-4" class="step">
+                <h2 class="text-xl font-bold mb-4 text-blue-800 border-b pb-2">PHẦN 4: READING</h2>
+                <div class="mb-4 bg-slate-100 p-4 rounded-lg">
+                    <h3 class="font-semibold mb-2">Ex 1. Read the passage and choose the correct answer A, B, C or D for each gap.</h3>
+                    <p class="text-justify mb-4">A hoverboard can bring (1) ________ a lot of benefits. It is self-balancing so it is safe for (2) ________. It is also fun because it connects to a music speaker with a phone, so riders can enjoy music while (3) ________ on the road. It can also give riders a smooth ride. It runs on an electric battery. Its run time is 30 minutes but you may have to wait 2-3 hours for the battery to (4) ________. Because hoverboards are safe, easy to use, and inexpensive, they will (5) ________ around for long for the children to enjoy.</p>
+                    <div id="reading1-container" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- STEP 5: WRITING 1 -->
+            <div id="step-5" class="step">
+                <h2 class="text-xl font-bold mb-4 text-blue-800 border-b pb-2">PHẦN 5: WRITING (Error Correction & Rewrite)</h2>
+                <div class="mb-8">
+                    <h3 class="font-semibold mb-3">Part 1. Find a mistake in the four underlined parts of each sentence and correct it. (Viết từ sửa vào ô)</h3>
+                    <p class="text-sm text-slate-500 mb-3 italic">Mẹo: Hệ thống chấm theo từ khóa đúng. Em có thể viết lại cả cụm hoặc chỉ từ cần sửa.</p>
+                    <div id="w_part1-container" class="space-y-4"></div>
+                </div>
+                <div class="mb-4">
+                    <h3 class="font-semibold mb-3">Part 2. Rewrite each of the sentences below in such a way that it means exactly the same as the one given before it.</h3>
+                    <div id="w_part2-container" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- STEP 6: WRITING 2 (TỰ LUẬN) -->
+            <div id="step-6" class="step">
+                <h2 class="text-xl font-bold mb-4 text-blue-800 border-b pb-2">PHẦN 6: WRITING (Paragraphs)</h2>
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                    <p class="text-sm text-yellow-800"><strong>Lưu ý:</strong> Phần này hệ thống không chấm tự động. Giáo viên sẽ trực tiếp đọc bài làm của em trong Link nộp bài để chấm điểm.</p>
+                </div>
+                <div class="mb-8">
+                    <h3 class="font-semibold mb-3">Part 3. Write a short paragraph about transport in the future. Change the forms of the words and phrases when necessary.</h3>
+                    <ul class="list-disc pl-5 mb-3 text-slate-600 text-sm">
+                        <li>In the future / cities / be / more crowded / traffic / get / worse.</li>
+                        <li>Traffic jams / happen / every day / the air / get / more polluted.</li>
+                        <li>Therefore / there / be / many / new means of transport / solve / these problems.</li>
+                        <li>They / be / faster / and / more convenient.</li>
+                        <li>People / also / think / spend /their holidays / new / faraway / places.</li>
+                    </ul>
+                    <textarea id="w_part3_answer" rows="5" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Viết đoạn văn của em vào đây..."></textarea>
+                </div>
+                <div class="mb-4">
+                    <h3 class="font-semibold mb-3">Part 4. Use the cues below to write a complete paragraph</h3>
+                    <ul class="list-disc pl-5 mb-3 text-slate-600 text-sm">
+                        <li>Nowadays / energy sources / run out / so / we / need / save / them/ as much as possible</li>
+                        <li>There / many / simple ways / save energy / home.</li>
+                        <li>First / we / should / use / electricity / water / economically / turn off / lights / faucets / when / not / use/ them.</li>
+                        <li>Second /we/ also/ use / low-energy bulbs / public transport .</li>
+                        <li>In short / we / try / best / save energy / future / our planet.</li>
+                    </ul>
+                    <textarea id="w_part4_answer" rows="5" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Viết đoạn văn của em vào đây..."></textarea>
+                </div>
+            </div>
+
+            <!-- STEP 7: KẾT QUẢ -->
+            <div id="step-7" class="step">
+                <div class="text-center mb-6">
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-4">
+                        <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-green-700 mb-2">Hoàn Thành!</h2>
+                    <p class="text-lg text-slate-600">Học sinh: <span id="display-name" class="font-bold text-slate-800"></span></p>
+                    
+                    <div class="mt-6 bg-blue-50 border-2 border-blue-200 rounded-xl p-6 max-w-sm mx-auto">
+                        <p class="text-slate-600 text-sm font-semibold uppercase tracking-wider">Điểm Tự Động (Phần 1 - 5)</p>
+                        <p class="text-4xl font-black text-blue-600 mt-2"><span id="display-score"></span> / <span id="display-total"></span></p>
+                    </div>
+                </div>
+                
+                <div class="mt-8 border-t pt-8">
+                    <h3 class="font-bold mb-4 text-center text-slate-700">GỬI BÀI CHO GIÁO VIÊN CHẤM</h3>
+                    <p class="text-sm text-center text-slate-500 mb-4">Em hãy sao chép đường link bên dưới và gửi cho Thầy/Cô giáo của mình nhé.</p>
+                    
+                    <div class="flex gap-2">
+                        <input type="text" id="share-link" readonly class="w-full p-3 bg-slate-100 border border-slate-300 rounded-lg text-sm text-slate-600 focus:outline-none">
+                        <button onclick="copyShareLink()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 whitespace-nowrap">
+                            Copy Link
+                        </button>
+                    </div>
+                    <p id="copy-msg" class="text-green-600 text-center font-semibold mt-3 hidden">Đã sao chép link thành công!</p>
+                </div>
+            </div>
+
+            <!-- Nút điều hướng -->
+            <div id="nav-buttons" class="mt-8 flex justify-between hidden pt-4 border-t">
+                <button id="btn-prev" onclick="prevStep()" class="px-6 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-lg transition">
+                    Quay lại
+                </button>
+                <span id="step-indicator" class="text-slate-400 font-medium self-center">Phần 1 / 6</span>
+                <button id="btn-next" onclick="nextStep()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition">
+                    Tiếp tục
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- TEACHER VIEW (DASHBOARD) -->
+    <div id="teacher-view" class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden my-8">
+        <div class="bg-indigo-600 p-6 text-white flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold">KẾT QUẢ BÀI LÀM</h1>
+                <p class="mt-1 text-indigo-100">Học sinh: <span id="tv-name" class="font-bold text-white text-xl"></span></p>
+            </div>
+            <div class="bg-white text-indigo-700 px-6 py-3 rounded-lg text-center shadow-md">
+                <p class="text-xs font-bold uppercase tracking-wide">Điểm Trắc Nghiệm</p>
+                <p class="text-2xl font-black"><span id="tv-score"></span> / <span id="tv-total"></span></p>
+            </div>
+        </div>
+
+        <div class="p-6 sm:p-8 space-y-8">
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                <h2 class="text-lg font-bold text-yellow-800 mb-2">Phần 6: WRITING (Chờ chấm thủ công)</h2>
+                
+                <div class="mb-4">
+                    <h3 class="font-semibold text-slate-700 mb-1">Paragraph 1 (Transport in the future)</h3>
+                    <div id="tv-w3" class="bg-white p-4 rounded border border-slate-200 text-slate-700 whitespace-pre-wrap min-h-[80px]"></div>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold text-slate-700 mb-1">Paragraph 2 (Saving energy)</h3>
+                    <div id="tv-w4" class="bg-white p-4 rounded border border-slate-200 text-slate-700 whitespace-pre-wrap min-h-[80px]"></div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Bảng phân tích Đúng/Sai (Phần 1 - 5)</h2>
+                <div id="tv-breakdown" class="text-sm text-slate-600 leading-relaxed">
+                    <!-- Breakdown injected here -->
+                </div>
+            </div>
+
+            <div class="text-center pt-6 border-t">
+                <button onclick="window.location.href = window.location.pathname" class="text-indigo-600 font-semibold hover:underline">
+                    &larr; Tạo bài kiểm tra mới
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DỮ LIỆU CÂU HỎI MỚI (ĐẦY ĐỦ CÂU VÀ NGỮ CẢNH)
+        const data = {
+            part1: [
+                {q: "Câu 1:", opts: ["A. appear", "B. solar", "C. bamboo", "D. parade"]}, 
+                {q: "Câu 2:", opts: ["A. vehicle", "B. hyperloop", "C. helicopter", "D. hope"]}, 
+                {q: "Câu 3:", opts: ["A. comfortable", "B. convenient", "C. economical", "D. autopilot"]}, 
+                {q: "Câu 4:", opts: ["A. thunder", "B. earthquake", "C. gather", "D. healthy"]}, 
+                {q: "Câu 5:", opts: ["A. coastline", "B. island", "C. simple", "D. kind"]}, 
+                {q: "Câu 6:", opts: ["A. sunset", "B. culture", "C. education", "D. funny"]}, 
+                {q: "Câu 7:", opts: ["A. nature", "B. map", "C. attraction", "D. language"]}, 
+                {q: "Câu 8:", opts: ["A. traffic", "B. same", "C. crash", "D. jam"]}, 
+                {q: "Câu 9:", opts: ["A. let", "B. jet", "C. vehicle", "D. success"]}, 
+                {q: "Câu 10:", opts: ["A. foot", "B. scooter", "C. flood", "D. food"]}
+            ],
+            part2: [
+                {q: "Câu 1:", opts: ["A. energy", "B. biogas", "C. luxury", "D. expensive"]}, 
+                {q: "Câu 2:", opts: ["A. positive", "B. negative", "C. electric", "D. dangerous"]}, 
+                {q: "Câu 3:", opts: ["A. pollution", "B. bicycle", "C. passenger", "D. gasoline"]}, 
+                {q: "Câu 4:", opts: ["A. capital", "B. festival", "C. visitor", "D. historic"]}, 
+                {q: "Câu 5:", opts: ["A. beautiful", "B. attraction", "C. continent", "D. national"]}, 
+                {q: "Câu 6:", opts: ["A. holiday", "B. poverty", "C. adventure", "D. benefit"]}, 
+                {q: "Câu 7:", opts: ["A. important", "B. hyperloop", "C. excellent", "D. musical"]}, 
+                {q: "Câu 8:", opts: ["A. exercise", "B. limited", "C. tomorrow", "D. yesterday"]}, 
+                {q: "Câu 9:", opts: ["A. dangerous", "B. opinion", "C. government", "D. typical"]}, 
+                {q: "Câu 10:", opts: ["A. delicious", "B. popular", "C. terrible", "D. natural"]}
+            ],
+            part3: [
+                {q: "1. Nuclear energy is a ________ source, but it is dangerous.", opts: ["A. renewable", "B. non-renewable", "C. natural resource", "D. fossil fuel"]}, 
+                {q: "2. \"Why is it called a ________ source?\" – \"Because it can be replaced easily and quickly.\"", opts: ["A. renewable", "B. non-renewable", "C. effective", "D. specific"]}, 
+                {q: "3. Using solar panels at home can help ________ your electric bill and your carbon footprint.", opts: ["A. reduce", "B. increase", "C. provide", "D. convert"]}, 
+                {q: "4. Wave energy is an ________ source of energy.", opts: ["A. environment friendly", "B. environmentally friendly", "C. environment friendliness", "D. harmful"]}, 
+                {q: "5. Coal, natural gas and oil are called ________.", opts: ["A. solar energy", "B. fossil fuels", "C. biogas", "D. nuclear energy"]}, 
+                {q: "6. Electric cars don't pollute the environment because they don't have ________.", opts: ["A. roof", "B. wheels", "C. pedals", "D. fumes"]}, 
+                {q: "7. A hyperloop helps everyone ________ traffic jams.", opts: ["A. avoid", "B. use", "C. have", "D. take"]}, 
+                {q: "8. I really want to fly a ________ like Doraemon.", opts: ["A. car", "B. bamboo-copter", "C. ship", "D. boat"]}, 
+                {q: "9. Urban transport pods can travel ________ around 30kph.", opts: ["A. with", "B. at", "C. in", "D. on"]}, 
+                {q: "10. A jet pack doesn't ________ a lot of space.", opts: ["A. have", "B. bring", "C. take", "D. occur"]}, 
+                {q: "11. Look! My classmates ________ football in the playground at the moment.", opts: ["A. am playing", "B. is playing", "C. playing", "D. are playing"]}, 
+                {q: "12. I think we ________ have electric taxis very soon.", opts: ["A. may", "B. might", "C. will", "D. would"]}, 
+                {q: "13. What ________ Kelvin doing now? – He ________ at my desk.", opts: ["A. is - sits", "B. does - sits", "C. is - is sitting", "D. do - does"]}, 
+                {q: "14. My father ________ an electric car next month.", opts: ["A. bought", "B. buys", "C. is buying", "D. buy"]}, 
+                {q: "15. The white cat is Helen's, and the black cat is ________.", opts: ["A. my", "B. I", "C. mine", "D. of mine"]}, 
+                {q: "16. This is Linda's hat, and those shoes are ________.", opts: ["A. her", "B. hers", "C. our", "D. their"]}, 
+                {q: "17. ________ grandfather used to take us fishing.", opts: ["A. Mine", "B. Hers", "C. Our", "D. Ours"]}, 
+                {q: "18. From ________ top of the mountain, we had an amazing view of the valley below.", opts: ["A. a", "B. an", "C. the", "D. nothing"]}, 
+                {q: "19. Kangaroos are considered the ________ of Australia.", opts: ["A. coastline", "B. symbol", "C. tower", "D. capital"]}, 
+                {q: "20. Scotland is famous for its long history and ________ castles.", opts: ["A. local", "B. modern", "C. ancient", "D. historical"]}
+            ],
+            part4: [
+                {q: "1. We must keep our streets <u>clean</u>.", opts: ["A. dirty", "B. tidy", "C. polluted", "D. unclean"]}, 
+                {q: "2. Big Ben is the most <u>famous</u> tower in England.", opts: ["A. well-known", "B. big", "C. fantastic", "D. wonderful"]}, 
+                {q: "3. This is my car and that is <u>her car</u>.", opts: ["A. she car", "B. hers", "C. she", "D. hers car"]}, 
+                {q: "4. Sky cycling tubes will be <u>easy</u> to drive.", opts: ["A. early", "B. simple", "C. late", "D. fast"]}, 
+                {q: "5. Travelling by hyperloop will be <u>faster</u> than by airplane.", opts: ["A. quicker", "B. slower", "C. longer", "D. shorter"]}
+            ],
+            part5: [
+                {q: "1. Solar energy is <u>clean</u> and safe for the environment.", opts: ["A. dirty", "B. useful", "C. modern", "D. natural"]}, 
+                {q: "2. This electric bus is very <u>convenient</u> for students.", opts: ["A. easy", "B. inconvenient", "C. cheap", "D. safe"]}, 
+                {q: "3. The streets in this city are usually <u>quiet</u> at night.", opts: ["A. peaceful", "B. noisy", "C. clean", "D. empty"]}, 
+                {q: "4. Travelling by hyperloop will be <u>faster</u> than by airplane.", opts: ["A. quicker", "B. slower", "C. longer", "D. shorter"]}, 
+                {q: "5. Australia is famous for its <u>beautiful</u> beaches.", opts: ["A. ugly", "B. modern", "C. clean", "D. crowded"]}
+            ],
+            ex6: [
+                "1. There are many ways to solve the problem of ________. (POLLUTE)", 
+                "2. Solar energy is ________, plentiful and clean. (RENEW)", 
+                "3. We should reduce the use of ________ at home. (ELECTRICAL)", 
+                "4. Most people want to live in a ________ house. (COMFORT)", 
+                "5. Do you think all the cars in the future will run on ________? (ELECTRIC)", 
+                "6. Our family has all the latest household ________. (APPLIANCE)", 
+                "7. A motorhome is very ________ for a long journey. (CONVENIENCE)", 
+                "8. I really like to live in a ________ house in the future. (FLOAT)", 
+                "9. The film was ________ though they spent millions of dollars making it. (SUCCEED)", 
+                "10. It is ________ in America to eat turkey on Thanksgiving Day. (TRADITION)"
+            ],
+            reading1: [
+                {q: "1. A hoverboard can bring (1) ________ a lot of benefits.", opts: ["A. owners", "B. riders", "C. players", "D. adults"]}, 
+                {q: "2. It is self-balancing so it is safe for (2) ________.", opts: ["A. beginners", "B. professionals", "C. adults", "D. driving"]}, 
+                {q: "3. It connects to a music speaker with a phone, so riders can enjoy music while (3) ________ on the road.", opts: ["A. hovering", "B. running", "C. driving", "D. charge"]}, 
+                {q: "4. Its run time is 30 minutes but you may have to wait 2-3 hours for the battery to (4) ________.", opts: ["A. change", "B. replace", "C. charge", "D. work"]}, 
+                {q: "5. Because hoverboards are safe, easy to use, and inexpensive, they will (5) ________ around for long for the children to enjoy.", opts: ["A. be", "B. live", "C. work", "D. stay"]}
+            ],
+            w_part1: [
+                "1. Solar energy <u>are</u> the energy that comes from the sun.", 
+                "2. They <u>will created</u> solar energy car in the future.", 
+                "3. Our teacher is ill, so she <u>won't is</u> at school next week.", 
+                "4. This is <u>hers</u> smart vehicle; ours is over there.", 
+                "5. I am <u>look</u> for a present but I can't find anything good.", 
+                "6. At the moment, the teacher <u>is explain</u> how solar energy works.", 
+                "7. This is Mr. and Mrs. Evers' house and those are <u>theirs</u> children.", 
+                "8. She goes to the bakery <u>by foot</u>, but sometimes she goes there by bicycle.", 
+                "9. He is <u>the Englishman</u>. He lives in Oxford.", 
+                "10. Ottawa is <u>a capital</u> of Canada."
+            ],
+            w_part2: [
+                "1. This bike belongs to Lan. → This bike is ________________.", 
+                "2. This is her cup. → This cup ________________.", 
+                "3. These are our pencils. → These pencils ________________.", 
+                "4. This is their picture. → This picture ________________.", 
+                "5. We will travel to New Zealand this weekend. → We are ________________.", 
+                "6. What is the distance between Linh’s house and Mai’s house? → How ________________?", 
+                "7. We played well. However, we couldn’t win the match. → Although we ________________.", 
+                "8. What is the distance between Hanoi and HCM city? → How far ________________?", 
+                "9. The distance from my house to school is about 500 metres. → It ________________.", 
+                "10. The distance between my house and the nearest bookstore is about 2 kms. → It's ________________?"
+            ]
+        };
+
+        // ĐÁP ÁN
+        const keys = {
+            p1: ['D', 'A', 'B', 'C', 'C', 'C', 'A', 'B', 'D', 'C'],
+            p2: ['D', 'C', 'A', 'D', 'B', 'C', 'A', 'C', 'B', 'A'],
+            p3: ['B', 'A', 'A', 'B', 'B', 'D', 'A', 'B', 'B', 'C', 'D', 'C', 'C', 'C', 'C', 'B', 'C', 'C', 'B', 'C'],
+            p4: ['B', 'A', 'B', 'B', 'A'],
+            p5: ['A', 'B', 'B', 'B', 'A'],
+            ex6: [['pollution'], ['renewable'], ['electricity'], ['comfortable'], ['electric'], ['appliances'], ['convenient'], ['floating'], ['unsuccessful'], ['traditional']],
+            r1: ['B', 'A', 'A', 'C', 'D'],
+            w1: [['is'], ['create'], ['be'], ['her'], ['looking'], ['explaining'], ['their'], ['on', 'on foot'], ['an'], ['the']],
+            w2: [['lan\'s', 'lans'], ['hers'], ['ours'], ['theirs'], ['going to travel'], ['far is it'], ['played well'], ['is it from'], ['is about 500'], ['about 2 km', 'about 2km']]
+        };
+
+        const questionOrder = [
+            { id: 'p1', count: 10, name: 'Part 1: Pronunciation' },
+            { id: 'p2', count: 10, name: 'Part 2: Stress' },
+            { id: 'p3', count: 20, name: 'Part 3: Multiple Choice' },
+            { id: 'p4', count: 5, name: 'Part 4: Closest' },
+            { id: 'p5', count: 5, name: 'Part 5: Opposite' },
+            { id: 'ex6', count: 10, name: 'Ex 6: Word Form' },
+            { id: 'r1', count: 5, name: 'Reading Ex 1' },
+            { id: 'w1', count: 10, name: 'Writing Part 1: Error Correction' },
+            { id: 'w2', count: 10, name: 'Writing Part 2: Rewrite' }
+        ];
+
+        // Khởi tạo giao diện
+        function renderMCQ(dataArray, containerId, prefix) {
+            const container = document.getElementById(containerId);
+            let html = '';
+            dataArray.forEach((item, index) => {
+                html += `<div class="mb-5"><p class="font-medium mb-2">${item.q}</p><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">`;
+                item.opts.forEach((opt) => {
+                    const letter = opt.substring(0, 1);
+                    html += `<label class="radio-label"><input type="radio" name="${prefix}_q${index+1}" value="${letter}" class="mr-2 w-4 h-4 text-blue-600"><span>${opt}</span></label>`;
+                });
+                html += `</div></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderTextInputs(dataArray, containerId, prefix, placeholder) {
+            const container = document.getElementById(containerId);
+            let html = '';
+            dataArray.forEach((item, index) => {
+                let textContent = item;
+                html += `<div class="mb-4"><p class="mb-1 text-slate-700" id="${prefix}_txt_${index+1}">${textContent}</p><input type="text" name="${prefix}_q${index+1}" placeholder="${placeholder}" class="w-full px-3 py-2 border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        renderMCQ(data.part1, 'part1-container', 'p1');
+        renderMCQ(data.part2, 'part2-container', 'p2');
+        renderMCQ(data.part3, 'part3-container', 'p3');
+        renderMCQ(data.part4, 'part4-container', 'p4');
+        renderMCQ(data.part5, 'part5-container', 'p5');
+        renderTextInputs(data.ex6, 'ex6-container', 'ex6', 'Nhập đáp án...');
+        renderMCQ(data.reading1, 'reading1-container', 'r1');
+        renderTextInputs(data.w_part1, 'w_part1-container', 'w1', 'Nhập từ/cụm từ đã sửa...');
+        renderTextInputs(data.w_part2, 'w_part2-container', 'w2', 'Viết tiếp vào phần trống...');
+
+        // Logic điều hướng
+        let currentStep = 0;
+        const totalSteps = 6;
+
+        function startQuiz() {
+            const nameInput = document.getElementById('studentName').value.trim();
+            if (!nameInput) { alert("Em vui lòng nhập tên trước khi làm bài nhé!"); return; }
+            document.getElementById('step-0').classList.remove('active');
+            currentStep = 1;
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+            document.getElementById('nav-buttons').classList.remove('hidden');
+            updateNav();
+        }
+
+        function updateNav() {
+            document.getElementById('step-indicator').innerText = `Phần ${currentStep} / ${totalSteps}`;
+            document.getElementById('btn-prev').style.display = currentStep === 1 ? 'none' : 'block';
+            const btnNext = document.getElementById('btn-next');
+            if (currentStep === totalSteps) {
+                btnNext.innerText = "Nộp bài & Hoàn thành";
+                btnNext.classList.replace('bg-blue-600', 'bg-green-600');
+                btnNext.classList.replace('hover:bg-blue-700', 'hover:bg-green-700');
+            } else {
+                btnNext.innerText = "Tiếp tục";
+                btnNext.classList.replace('bg-green-600', 'bg-blue-600');
+                btnNext.classList.replace('hover:bg-green-700', 'hover:bg-blue-700');
+            }
+        }
+
+        function nextStep() {
+            if (currentStep === totalSteps) { processGrading(); return; }
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            currentStep++;
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+            window.scrollTo(0, 0);
+            updateNav();
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                document.getElementById(`step-${currentStep}`).classList.remove('active');
+                currentStep--;
+                document.getElementById(`step-${currentStep}`).classList.add('active');
+                window.scrollTo(0, 0);
+                updateNav();
+            }
+        }
+
+        function getVal(name, type='radio') {
+            if(type === 'radio') {
+                const el = document.querySelector(`input[name="${name}"]:checked`);
+                return el ? el.value : '';
+            } else {
+                const el = document.querySelector(`input[name="${name}"]`);
+                return el && el.value ? el.value.trim() : '';
+            }
+        }
+
+        function isCorrect(userAns, keyAns) {
+            if(!userAns) return false;
+            userAns = userAns.toLowerCase().trim();
+            if (Array.isArray(keyAns)) {
+                return keyAns.some(k => userAns.includes(k.toLowerCase()));
+            }
+            return userAns === keyAns.toLowerCase();
+        }
+
+        function processGrading() {
+            let score = 0;
+            let totalQuestions = 0;
+            let resultMap = ""; 
+
+            questionOrder.forEach(section => {
+                const sectionKeys = keys[section.id];
+                const isText = Array.isArray(sectionKeys[0]); 
+
+                for (let i = 0; i < section.count; i++) {
+                    totalQuestions++;
+                    const userAns = getVal(`${section.id}_q${i+1}`, isText ? 'text' : 'radio');
+                    if (isCorrect(userAns, sectionKeys[i])) {
+                        score++;
+                        resultMap += "1";
+                    } else {
+                        resultMap += "0";
+                    }
+                }
+            });
+
+            const sName = document.getElementById('studentName').value.trim();
+            document.getElementById('display-name').innerText = sName;
+            document.getElementById('display-score').innerText = score;
+            document.getElementById('display-total').innerText = totalQuestions;
+
+            const w3 = document.getElementById('w_part3_answer').value.trim();
+            const w4 = document.getElementById('w_part4_answer').value.trim();
+            
+            const payload = {
+                n: sName,
+                s: score,
+                t: totalQuestions,
+                m: resultMap, 
+                w3: w3,
+                w4: w4
+            };
+
+            const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
+            const shareUrl = window.location.href.split('?')[0] + "?d=" + encoded;
+            document.getElementById('share-link').value = shareUrl;
+
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            document.getElementById('nav-buttons').classList.add('hidden');
+            document.getElementById('step-7').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function copyShareLink() {
+            const linkInput = document.getElementById('share-link');
+            linkInput.select();
+            linkInput.setSelectionRange(0, 99999);
+            try {
+                navigator.clipboard.writeText(linkInput.value).then(showCopySuccess).catch(() => {
+                    document.execCommand('copy'); showCopySuccess();
+                });
+            } catch (err) {
+                document.execCommand('copy'); showCopySuccess();
+            }
+        }
+
+        function showCopySuccess() {
+            const msg = document.getElementById('copy-msg');
+            msg.classList.remove('hidden');
+            setTimeout(() => { msg.classList.add('hidden'); }, 3000);
+        }
+
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('d')) {
+                document.getElementById('quiz-view').style.display = 'none';
+                document.getElementById('teacher-view').style.display = 'block';
+                
+                try {
+                    const payload = JSON.parse(decodeURIComponent(atob(params.get('d'))));
+                    document.getElementById('tv-name').innerText = payload.n || "Khách";
+                    document.getElementById('tv-score').innerText = payload.s || 0;
+                    document.getElementById('tv-total').innerText = payload.t || 0;
+                    document.getElementById('tv-w3').innerText = payload.w3 || "(Học sinh không viết gì)";
+                    document.getElementById('tv-w4').innerText = payload.w4 || "(Học sinh không viết gì)";
+
+                    let breakdownHTML = '';
+                    let charIndex = 0;
+                    
+                    questionOrder.forEach(section => {
+                        breakdownHTML += `<div class="mb-4"><strong class="text-slate-800 block mb-2">${section.name}</strong><div class="flex flex-wrap gap-2">`;
+                        for(let i = 0; i < section.count; i++) {
+                            const status = payload.m.charAt(charIndex);
+                            const bgClass = status === '1' ? 'correct-box text-green-800' : 'wrong-box text-red-800';
+                            breakdownHTML += `<span class="inline-block px-2 py-1 border rounded ${bgClass}">Q${i+1}: ${status === '1' ? '✓' : '✗'}</span>`;
+                            charIndex++;
+                        }
+                        breakdownHTML += `</div></div>`;
+                    });
+
+                    document.getElementById('tv-breakdown').innerHTML = breakdownHTML;
+                } catch (e) {
+                    alert("Đường link bị lỗi hoặc không hợp lệ!");
+                    document.getElementById('quiz-view').style.display = 'block';
+                    document.getElementById('teacher-view').style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
